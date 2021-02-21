@@ -11,7 +11,8 @@ from utils import progressbar, type_statics_intrainingdatasetreturner
 import re
 from spacy.language import Language
 from config import Config
-
+import pdb
+import copy
 def onepmid_contents_returner(one_pmid_filepath):
     contents_list = list()
 
@@ -411,8 +412,6 @@ def split_pubtator2pmid(input_file_path, output_data_dir, suffix='.one_p'):
 
                 if counter % 200 == 0:
                     print(counter, 'documents are splitted')
-                if counter > 0 and counter == 20 and DEBUG:
-                    break
 
 def one_pmid_path2entities(one_pmid_path ,type_statistics_json_path):
     with open(type_statistics_json_path, 'r') as g:
@@ -442,7 +441,13 @@ if __name__ =='__main__':
                                                                   corpus_pubtator_path=CORPUS_PUBTATOR)
     splitted_doc_filepathlist = splitted_meds_gettor(dirpath_for_glob=FORGLOB_DIRPATH)
     if DEBUG:
-        splitted_doc_filepathlist = splitted_doc_filepathlist[:10]
+        train_pmid, dev_pmid, test_pmid = train_pmid[:10], dev_pmid[:10], test_pmid[:10]
+        debug_pmid_pathlist = []
+        for filepath in splitted_doc_filepathlist:
+            pmid = filepath.replace('./pickled_doc_dir/', '').replace('.one_p','')
+            if pmid in train_pmid + dev_pmid + test_pmid:
+                debug_pmid_pathlist.append(filepath)
+        splitted_doc_filepathlist = copy.copy(debug_pmid_pathlist)
     split_filepathlist2each_pmid_lines_and_allinfo_included_pkl(split_med_filepathlist=splitted_doc_filepathlist)
     print('dataset preprocessing end')
 
