@@ -1,5 +1,5 @@
 # Multiprocessing PubTator Parsing for Entity Linking
-## Quick Starts with MedMentions-dataset and NCBI-dataset
+## Quick Starts with MedMentions, BC5CDR and NCBI-dataset
 ```
 $ git clone https://github.com/izuna385/PubTator-Multiprocess-Parser.git
 $ cd PubTator-Multiprocess-Parser
@@ -21,6 +21,9 @@ $ sh ./scripts/quick_start_Med_full.sh # for MedMentions
   https://qiita.com/izuna385/items/d673694d25b2cf4efb89
 
 # How to run
+* Note: The following steps are entirely automated. 
+
+  After building container, run `sh ./scripts/quick_start_[dataset_name]_full.sh`
 
 ## 1. Place PubTator format files to the `./dataset/`
 
@@ -55,7 +58,7 @@ $ sh ./scripts/quick_start_Med_full.sh # for MedMentions
 * Each document takes about 100sec for preprocessing, under `en_core_sci_md` model.
 
 * Under 24 core cpus and `en_core_sci_md` model, ~10GB RAM is needed.
-  
+
 # LISENCE
 
 MIT

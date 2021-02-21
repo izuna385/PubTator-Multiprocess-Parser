@@ -436,7 +436,7 @@ if __name__ =='__main__':
 
     split_pubtator2pmid(input_file_path=CORPUS_PUBTATOR, output_data_dir=EACH_DOC_DIRPATH)
 
-    # train/dev/test pmid is shared
+    # train/dev/test pmid is shared between MedMentions and St21pv Dataset.
     train_pmid, dev_pmid, test_pmid = train_dev_test_pmid_returner()
     TYPE_STATISTICS_JSON = type_statics_intrainingdatasetreturner(trng_pmid_path=All_DATADIR+'corpus_pubtator_pmids_trng.txt',
                                                                   corpus_pubtator_path=CORPUS_PUBTATOR)
