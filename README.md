@@ -7,9 +7,9 @@ $ docker build -t multiprocess_pubtator .
 $ docker run -it multiprocess_pubtator /bin/bash
 
 # In container
-$ sh quick_start_Med_full.sh
+$ sh ./scripts/quick_start_Med_full.sh # for MedMentions
 ```
-* You can run `quick_start_NCBI_full.sh`, too.
+* You can run `quick_start_NCBI_full.sh`, too. If so, before running, make `pickled_doc_dir` empty.
 
 * Note: If you use Mac, do `brew install wget` before running above script.
 
