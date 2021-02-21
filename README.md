@@ -1,4 +1,4 @@
-# Multiprocessing PubTatorParser
+# Multiprocessing PubTator Parsing for Entity Linking
 ## Quick Starts with MedMentions-dataset and NCBI-dataset
 ```
 $ git clone https://github.com/izuna385/Multiprocessing_PubTatorParser.git
