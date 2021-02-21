@@ -1,10 +1,12 @@
 import argparse
-import sys, json
+import sys
 from distutils.util import strtobool
 
 class Config:
     def __init__(self):
         parser = argparse.ArgumentParser(description='PubTatorParser')
+
+        parser.add_argument('-debug', action="store", default=False, type=strtobool)
         parser.add_argument('-pickled_doc_dir', action="store", default='./pickled_doc_dir/', type=str)
         parser.add_argument('-spacy_model', action="store", default='en_core_sci_sm', type=str)
         parser.add_argument('-datadir', action="store", default='./dataset/', type=str)

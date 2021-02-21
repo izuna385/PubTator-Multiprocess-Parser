@@ -25,9 +25,7 @@ def type_statics_intrainingdatasetreturner(trng_pmid_path, corpus_pubtator_path)
                     train_pmids.append(pmid)
         return train_pmids
     trng_pmids = trng_pmid_returner(trng_pmid_path=trng_pmid_path)
-    all_train_anno = 0
     type_statics = {}
-    unknowntypes = []
 
     with open(corpus_pubtator_path,'r') as f:
         for line in f:
@@ -45,8 +43,6 @@ def type_statics_intrainingdatasetreturner(trng_pmid_path, corpus_pubtator_path)
                             else:
                                 type_statics[type] = 1
 
-                            # if 'UnknownType' in types_list:
-                            #     print(types_list)
                 except:
                     print('typeparse_error',line)
 

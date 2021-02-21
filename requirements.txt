@@ -1,0 +1,16 @@
+numpy
+spacy>=3.0.0,<3.1.0
+spacy-lookups-data
+pandas
+requests>=2.0.0,<3.0.0
+conllu
+joblib
+nmslib>=1.7.3.6
+scikit-learn>=0.20.3
+pytest
+pytest-cov
+flake8
+black
+mypy
+twine
+pysbd

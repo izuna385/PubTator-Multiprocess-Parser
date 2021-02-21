@@ -1,18 +1,21 @@
 # Multiprocessing PubTatorParser
-## Quick Starts with NCBI-dataset
+## Quick Starts with MedMentions-dataset and NCBI-dataset
 ```
-git clone https://github.com/izuna385/Multiprocessing_PubTatorParser.git
-cd Multiprocessing_PubTatorParser
-sh quick_start.sh
+$ git clone https://github.com/izuna385/Multiprocessing_PubTatorParser.git
+$ cd Multiprocessing_PubTatorParser
+$ docker build -t multiprocess_pubtator .
+$ docker run -it multiprocess_pubtator /bin/bash
+
+# In container
+$ sh quick_start_Med_full.sh
 ```
+* You can run `quick_start_NCBI_full.sh`, too.
+
+* Note: If you use Mac, do `brew install wget` before running above script.
 
 ## Description
 * Preprocessing PubTator-format documents to each mentions.
 
-# Requirements
-* Spacy (, or, [Scispacy](https://github.com/allenai/scispacy))
-
-* multiprocess
 
 # How to run
 
@@ -43,8 +46,8 @@ sh quick_start.sh
    'lines_lemma':lines_lemma
   }
   ```
-
-  For more details, see `main.py`
+  
+  * The Key component is 'lines', in which all information for entity linking is included.
 
 * Each document takes about 100sec for preprocessing, under `en_core_sci_md` model.
 

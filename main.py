@@ -3,20 +3,14 @@ import glob
 import json
 from multiprocessing import Pool
 import multiprocessing as multi
-from tqdm import tqdm
 import pickle
 import scispacy
 from spacy.symbols import ORTH
 import time
 from utils import progressbar, type_statics_intrainingdatasetreturner
 import re
-import argparse
-import sys
+from spacy.language import Language
 from config import Config
-
-conf_class = Config()
-opts = conf_class.get_params()
-PICKLED_DOC_DIR = opts.pickled_doc_dir
 
 def onepmid_contents_returner(one_pmid_filepath):
     contents_list = list()
@@ -181,7 +175,7 @@ def offset_charlist_and_sentence_split2lines(offset_charlist, split_sentences, e
     return train_dev_test_lines, train_dev_test_lines_lemma
 
 def final_tokenization_after_targetflag_inverted(mention_replaced_sentence):
-    nlp_for_tokens = spacy.load('en_core_sci_md')
+    nlp_for_tokens = spacy.load(SPACY_MODEL)
     nlp_for_tokens.tokenizer.add_special_case('<target>', [{ORTH: '<target>'}])
     nlp_for_tokens.tokenizer.add_special_case('</target>', [{ORTH: '</target>'}])
     tokens = []
@@ -242,9 +236,9 @@ def one_pmid_path2linesadded_allinfo_pkl(one_pmid_path):
                                                    entities= entities)
     # for line in lines:
     #     print(line)
-    new_pickled_path = PICKLED_DOC_DIR + str(pubmed_id) + '.pkl'
-    with open(new_pickled_path, 'wb') as fff:
-        pickle.dump({'title':title,
+    new_pickled_path = PICKLED_DOC_DIR + str(pubmed_id) + '.json'
+    with open(new_pickled_path, 'w') as fff:
+        json.dump({'title':title,
                      'abst':abst,
                      'title_plus_abst': title_plus_abst,
                      'pubmed_id': pubmed_id,
@@ -253,7 +247,7 @@ def one_pmid_path2linesadded_allinfo_pkl(one_pmid_path):
                      'if_txt_length_is_changed_flag':if_txt_lenght_is_changed_flag,
                      'lines':lines,
                      'lines_lemma':lines_lemma}
-                    ,fff)
+                    , fff, ensure_ascii=False, indent=4, sort_keys=False, separators=(',', ': '))
     t2_ = time.time()
 
     print('ONE DOC preprocess time', t2_-t1_,'sec')
@@ -266,8 +260,8 @@ def one_pmid_path2linesadded_allinfo_pkl(one_pmid_path):
 
 def one_pmid_path2allinfo(one_pmid_path):
     type_statistics_json = TYPE_STATISTICS_JSON
-    spacy_model = spacy.load('en_core_sci_md')
-    spacy_model.add_pipe(prevent_sentence_boundaries, before="parser")
+    spacy_model = spacy.load(SPACY_MODEL)
+    spacy_model.add_pipe('custom_sentence_boundary_split', before="parser")
 
     contents = onepmid_contents_returner(one_pmid_filepath=one_pmid_path)
     title, abst, title_plus_abst, pubmed_id, entities = process_contets_list(lines=contents,
@@ -290,8 +284,8 @@ def split_filepathlist2each_pmid_lines_and_allinfo_included_pkl(split_med_filepa
 def one_pmid_path2mistakeflag(one_pmid_path):
 
     type_statistics_json = TYPE_STATISTICS_JSON
-    spacy_model = spacy.load('en_core_sci_md')
-    spacy_model.add_pipe(prevent_sentence_boundaries, before="parser")
+    spacy_model = spacy.load(SPACY_MODEL)
+    spacy_model.add_pipe('custom_sentence_boundary_split', before="parser")
 
     contents = onepmid_contents_returner(one_pmid_filepath=one_pmid_path)
     title, abst, title_plus_abst, pubmed_id, entities = process_contets_list(lines=contents,
@@ -301,7 +295,6 @@ def one_pmid_path2mistakeflag(one_pmid_path):
                                                                                    nlp=spacy_model)
     if if_txt_lenght_is_changed_flag > 0:
         print(pubmed_id)
-        print()
 
     # return title, abst, title_plus_abst, pubmed_id, entities, splitted_sentence, if_txt_lenght_is_changed_flag
     return if_txt_lenght_is_changed_flag
@@ -343,10 +336,12 @@ def splitted_meds_gettor(dirpath_for_glob):
     filelist = glob.glob(dirpath_for_glob)
     return filelist
 
-def train_dev_test_pmid_returner(pmid_datadir):
-    train = all_datadir + 'corpus_pubtator_pmids_trng.txt'
-    dev = all_datadir + 'corpus_pubtator_pmids_dev.txt'
-    test = all_datadir + 'corpus_pubtator_pmids_test.txt'
+def train_dev_test_pmid_returner():
+    train = All_DATADIR + 'corpus_pubtator_pmids_trng.txt'
+    dev = All_DATADIR + 'corpus_pubtator_pmids_dev.txt'
+    test = All_DATADIR + 'corpus_pubtator_pmids_test.txt'
+    if DEBUG:
+        return pmid_list_returner(train)[:10], pmid_list_returner(dev)[:10], pmid_list_returner(test)[:10]
 
     return pmid_list_returner(train), pmid_list_returner(dev), pmid_list_returner(test)
 
@@ -358,7 +353,7 @@ def pmid_list_returner(txtpath):
                 pmid_list.append(line.strip())
     return pmid_list
 
-
+@Language.component('custom_sentence_boundary_split')
 def prevent_sentence_boundaries(doc):
     for i, token in enumerate(doc):
         if not can_be_sentence_start(token, doc):
@@ -416,6 +411,8 @@ def split_pubtator2pmid(input_file_path, output_data_dir, suffix='.one_p'):
 
                 if counter % 200 == 0:
                     print(counter, 'documents are splitted')
+                if counter > 0 and counter == 20 and DEBUG:
+                    break
 
 def one_pmid_path2entities(one_pmid_path ,type_statistics_json_path):
     with open(type_statistics_json_path, 'r') as g:
@@ -426,19 +423,26 @@ def one_pmid_path2entities(one_pmid_path ,type_statistics_json_path):
                                                                              type_statistics_json=type_statistics_json)
     return pubmed_id, entities
 
-
 if __name__ =='__main__':
-    EACH_DOC_DIRPATH = './pickled_doc_dir/'
-    FORGLOB_DIRPATH = "./pickled_doc_dir/*"
-    all_datadir = './dataset/'
-    CORPUS_PUBTATOR = all_datadir + 'corpus_pubtator.txt'
+    CONFIG = Config()
+    OPTS = CONFIG.get_params()
+    DEBUG = OPTS.debug
+    PICKLED_DOC_DIR = OPTS.pickled_doc_dir
+    EACH_DOC_DIRPATH = OPTS.pickled_doc_dir
+    FORGLOB_DIRPATH = OPTS.pickled_doc_dir + '*'
+    All_DATADIR = OPTS.datadir
+    CORPUS_PUBTATOR = All_DATADIR + 'corpus_pubtator.txt'
+    SPACY_MODEL = OPTS.spacy_model
+
     split_pubtator2pmid(input_file_path=CORPUS_PUBTATOR, output_data_dir=EACH_DOC_DIRPATH)
 
     # train/dev/test pmid is shared
-    train_pmid, dev_pmid, test_pmid = train_dev_test_pmid_returner(pmid_datadir=all_datadir)
-    TYPE_STATISTICS_JSON = type_statics_intrainingdatasetreturner(trng_pmid_path=all_datadir+'corpus_pubtator_pmids_trng.txt',
+    train_pmid, dev_pmid, test_pmid = train_dev_test_pmid_returner()
+    TYPE_STATISTICS_JSON = type_statics_intrainingdatasetreturner(trng_pmid_path=All_DATADIR+'corpus_pubtator_pmids_trng.txt',
                                                                   corpus_pubtator_path=CORPUS_PUBTATOR)
     splitted_doc_filepathlist = splitted_meds_gettor(dirpath_for_glob=FORGLOB_DIRPATH)
+    if DEBUG:
+        splitted_doc_filepathlist = splitted_doc_filepathlist[:10]
     split_filepathlist2each_pmid_lines_and_allinfo_included_pkl(split_med_filepathlist=splitted_doc_filepathlist)
     print('dataset preprocessing end')
 
