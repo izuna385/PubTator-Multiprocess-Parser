@@ -16,6 +16,9 @@ $ sh quick_start_Med_full.sh
 ## Description
 * Preprocessing PubTator-format documents to each mentions.
 
+* If you are japanese, this might be useful for you.
+  
+  https://qiita.com/izuna385/items/d673694d25b2cf4efb89
 
 # How to run
 
