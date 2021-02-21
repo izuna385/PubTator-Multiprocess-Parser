@@ -1,8 +1,8 @@
 # Multiprocessing PubTator Parsing for Entity Linking
 ## Quick Starts with MedMentions-dataset and NCBI-dataset
 ```
-$ git clone https://github.com/izuna385/Multiprocessing_PubTatorParser.git
-$ cd Multiprocessing_PubTatorParser
+$ git clone https://github.com/izuna385/PubTator-Multiprocess-Parser.git
+$ cd PubTator-Multiprocess-Parser
 $ docker build -t multiprocess_pubtator .
 $ docker run -it multiprocess_pubtator /bin/bash
 
