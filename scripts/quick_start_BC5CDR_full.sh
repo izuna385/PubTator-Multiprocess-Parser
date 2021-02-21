@@ -4,4 +4,5 @@ cd BioCreative-V-CDR-Corpus
 unzip CDR_Data.zip
 cp CDR_Data/CDR.Corpus.v010516/*.txt ./../
 cd ./../../
+mkdir pickled_doc_dir
 python3 main.py

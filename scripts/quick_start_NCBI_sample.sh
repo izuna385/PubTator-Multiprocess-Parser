@@ -10,5 +10,6 @@ wget https://www.ncbi.nlm.nih.gov/CBBresearch/Dogan/DISEASE/NCBItestset_corpus.z
 unzip NCBItestset_corpus.zip
 rm NCBItestset_corpus.zip
 cd ./../
+mkdir pickled_doc_dir
 python3 NCBIpreprocess.py
 python3 main.py -debug True
