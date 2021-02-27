@@ -14,6 +14,7 @@ PMID_FILE_PREFIX='corpus_pubtator_pmids_'
 PMID_FILE_SUFFIX='.txt'
 
 def trn_dev_test_pmidsets_maker():
+    all_pmids = []
     for bc5cdr_file, pmid_file_symbol in from_bc5cdrset_2_common.items():
         source_file = DATASET_DIRPATH + CDR_FILE_PREFIX + bc5cdr_file + CDR_FILE_SUFFIX
         dest_file = DATASET_DIRPATH + PMID_FILE_PREFIX + pmid_file_symbol + PMID_FILE_SUFFIX
@@ -25,6 +26,7 @@ def trn_dev_test_pmidsets_maker():
                     l = line.strip().split('|')
                     pmid = l[0]
                     pmids.append(pmid)
+                    all_pmids.append(pmid)
 
         with open(dest_file, 'w') as g:
             for idx, pmid in enumerate(pmids):
@@ -32,6 +34,14 @@ def trn_dev_test_pmidsets_maker():
                     g.write(pmid+'\n')
                 else:
                     g.write(pmid)
+
+    with open(DATASET_DIRPATH + 'corpus_pubtator_pmids_all.txt', 'w') as h:
+        for idx, pmid in enumerate(all_pmids):
+            if idx != len(all_pmids) - 1:
+                h.write(pmid + '\n')
+            else:
+                h.write(pmid)
+
 
 def corpus_pubtator_maker():
     entire_file = ''
