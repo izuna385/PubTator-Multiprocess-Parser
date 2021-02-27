@@ -1,2 +1,4 @@
 .idea/*
+./dataset/*
+./preprocessed_doc_dir/*
 ./pickled_doc_dir/*
