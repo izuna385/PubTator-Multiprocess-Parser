@@ -1,6 +1,7 @@
 import spacy
 import glob
 import json
+import os
 from multiprocessing import Pool
 import multiprocessing as multi
 import pickle
@@ -237,7 +238,7 @@ def one_pmid_path2linesadded_allinfo_pkl(one_pmid_path):
                                                    entities= entities)
     # for line in lines:
     #     print(line)
-    new_pickled_path = PICKLED_DOC_DIR + str(pubmed_id) + '.json'
+    new_pickled_path = PREPROCESSED_DOC_DIR + str(pubmed_id) + '.json'
     with open(new_pickled_path, 'w') as fff:
         json.dump({'title':title,
                      'abst':abst,
@@ -256,7 +257,7 @@ def one_pmid_path2linesadded_allinfo_pkl(one_pmid_path):
     if len(preprocessed_doc_length) % 100 == 0:
         GLOBDIR = PICKLED_DOC_DIR + '*'
         all_pmid_filepath = './dataset/corpus_pubtator_pmids_all.txt'
-        progressbar(globdir=GLOBDIR, all_pmid_filepath=all_pmid_filepath)
+        # progressbar(globdir=GLOBDIR, all_pmid_filepath=all_pmid_filepath)
     # return title, abst, title_plus_abst, pubmed_id, entities, splitted_sentence, if_txt_lenght_is_changed_flag, lines
 
 def one_pmid_path2allinfo(one_pmid_path):
@@ -427,6 +428,11 @@ if __name__ =='__main__':
     OPTS = CONFIG.get_params()
     DEBUG = OPTS.debug
     PICKLED_DOC_DIR = OPTS.pickled_doc_dir
+    PREPROCESSED_DOC_DIR = OPTS.preprocessed_doc_dir
+    if not os.path.exists(PICKLED_DOC_DIR):
+        os.mkdir(PICKLED_DOC_DIR)
+    if not os.path.exists(PREPROCESSED_DOC_DIR):
+        os.mkdir(PREPROCESSED_DOC_DIR)
     EACH_DOC_DIRPATH = OPTS.pickled_doc_dir
     FORGLOB_DIRPATH = OPTS.pickled_doc_dir + '*'
     All_DATADIR = OPTS.datadir
