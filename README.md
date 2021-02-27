@@ -4,7 +4,7 @@
 $ git clone https://github.com/izuna385/PubTator-Multiprocess-Parser.git
 $ cd PubTator-Multiprocess-Parser
 $ docker build -t multiprocess_pubtator .
-$ docker run -it multiprocess_pubtator /bin/bash
+$ docker run -itd multiprocess_pubtator /bin/bash
 
 # In container
 $ sh ./scripts/quick_start_Med_full.sh # for MedMentions
