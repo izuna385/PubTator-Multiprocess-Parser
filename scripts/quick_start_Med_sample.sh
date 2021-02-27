@@ -1,4 +1,5 @@
 # WARNING: This script is only for checking parsing. For full parsing, run full.sh
+mkdir dataset
 cd dataset
 git clone https://github.com/chanzuckerberg/MedMentions
 cd ./MedMentions/full/data/

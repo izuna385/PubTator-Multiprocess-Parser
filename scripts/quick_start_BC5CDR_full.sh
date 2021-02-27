@@ -1,3 +1,4 @@
+mkdir dataset
 cd dataset
 git clone https://github.com/JHnlp/BioCreative-V-CDR-Corpus
 cd BioCreative-V-CDR-Corpus

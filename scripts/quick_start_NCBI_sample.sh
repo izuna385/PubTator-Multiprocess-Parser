@@ -1,4 +1,5 @@
 # WARNING: This script is only for checking parsing. For full parsing, run full.sh
+mkdir dataset
 cd dataset
 wget https://www.ncbi.nlm.nih.gov/CBBresearch/Dogan/DISEASE/NCBItrainset_corpus.zip
 unzip NCBItrainset_corpus.zip

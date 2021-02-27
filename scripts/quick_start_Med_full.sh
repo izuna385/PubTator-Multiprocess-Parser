@@ -1,3 +1,4 @@
+mkdir dataset
 cd dataset
 git clone https://github.com/chanzuckerberg/MedMentions
 cd ./MedMentions/full/data/
